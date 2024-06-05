@@ -686,7 +686,7 @@ OCCk <- mcaPk %>%
   mutate(OCCk = round((avePPk/(1-avePPk))/(kclass/(1-kclass)),3))
 
 # Put everything together
-class_df <- data.frame(OCCk, entropy)
+class_df <- data.frame(OCCk)
 ```
 
 Now, use `{gt}` to make a nicely formatted table
@@ -702,9 +702,8 @@ class_table <- class_df %>%
       CI = "95% CI",
       mcaPk = md("*mcaPk*"),
       avePPk = md("*AvePPk*"),
-      OCCk = md("*OCCk*"),
-      entropy = "Entropy") %>% 
-    sub_missing(7,
+      OCCk = md("*OCCk*")) %>% 
+    sub_missing(6,
               missing_text = "") %>%
   cols_align(align = "center") %>% 
   opt_align_table_header(align = "left") %>% 
