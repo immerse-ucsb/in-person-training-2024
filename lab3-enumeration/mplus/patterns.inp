@@ -1,8 +1,8 @@
 TITLE:
 LCA - Save response patterns
 DATA:
-FILE = "C:/Users/dinan/Desktop/in-person-day1/lab3/mplus/patterns.dat";
- 
+FILE = "C:/Users/dinan/Box/IES_IMMERSE/Training Materials/
+in-person-training-2024/lab3-enumeration/mplus/patterns.dat"; 
 VARIABLE:
 NAMES = rand lsayid region urban gender mothed fathed raceth math_irt enjoy good
      undrstnd nervous scared useful logical job adult; 
@@ -15,7 +15,7 @@ estimator = mlr;
     type = mixture;    
     starts = 0; 
     processors = 10;
-    optseed = 939021;
+    optseed = 568405;
 OUTPUT:
 patterns tech10 tech11 tech14
 SAVEDATA:

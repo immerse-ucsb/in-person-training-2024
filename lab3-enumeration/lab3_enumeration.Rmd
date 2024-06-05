@@ -305,6 +305,25 @@ fit_table
 
 ------------------------------------------------------------------------
 
+Enumeration Table Shortcut
+
+```{r, eval = FALSE}
+source("enum_table.txt")
+
+output_lsal <- readModels(here("enum")) 
+
+# To see rows:
+seeRows(output_lsal)
+
+# Arguments for `enum_table`
+# 1. readModels objects
+# 2-5. Rows of successfully estimated models 
+enum_table(output_lsal, 1:6)
+```
+
+
+------------------------------------------------------------------------
+
 Save table:
 
 ```{r}
@@ -358,7 +377,7 @@ ggsave(here("figures", "info_criteria.png"), dpi=300, height=5, width=7, units="
 
 ### Compare Class Solutions
 
-Compare probability plots for $K = 1:4$ class solutions
+Compare probability plots for $K = 1:6$ class solutions
 
 ```{r}
 model_results <- data.frame()
@@ -452,7 +471,7 @@ patterns  <- mplusObject(
     type = mixture;    
     starts = 0; 
     processors = 10;
-    optseed = 939021;",
+    optseed = 568405;",
   
   SAVEDATA = 
    "File=savedata.dat;
@@ -598,7 +617,7 @@ classification  <- mplusObject(
     type = mixture;
     starts = 0; 
     processors = 10;
-    optseed = 939021;
+    optseed = 568405;
     bootstrap = 1000;",
   
   MODEL =
