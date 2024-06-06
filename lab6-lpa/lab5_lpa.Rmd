@@ -1,0 +1,256 @@
+---
+title: "Latent Profile Analysis Enumeration"
+author: "IMMERSE Training Team"
+date: "Updated: `r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    theme: flatly
+  pdf_document:
+    toc: yes
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri(file.path("figures/immerse_hex.png")), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; padding:10px;',
+               width ="250",
+               height ="193")
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning = FALSE,
+                      message = FALSE) #Here, I have made it so that when you knit your .rmd, warnings and messages will not show up in the html markdown. 
+```
+
+------------------------------------------------------------------------
+
+# IMMERSE Project
+
+![](figures/IESNewLogo.jpg){style="float: left;" width="300"}
+
+The Institute of Mixture Modeling for Equity-Oriented Researchers, Scholars, and Educators (IMMERSE) is an IES funded training grant (R305B220021) to support Education scholars in integrating mixture modeling into their research.
+
+-   Please [visit our website](https://immerse.education.ucsb.edu/) to learn more and apply for the year-long fellowship.
+
+-   Follow us on [Twitter](https://twitter.com/IMMERSE_UCSB)!
+
+How to reference this walkthrough: *This work was supported by the IMMERSE Project* (IES - 305B220021)
+
+Visit our [GitHub](https://github.com/immerse-ucsb) account to download the materials needed for this walkthrough.
+
+------------------------------------------------------------------------
+
+*Example: PISA Student Data*
+
+1.  The first example closely follows the vignette used to demonstrate the [tidyLPA](https://data-edu.github.io/tidyLPA/articles/Introduction_to_tidyLPA.html) package (Rosenberg, 2019).
+
+-   This model utilizes the `PISA` data collected in the U.S. in 2015. To learn more about this data [see here](http://www.oecd.org/pisa/data/).
+-   To access the 2015 US `PISA` data & documentation in R use the following code:
+
+```{r, eval = FALSE}
+devtools::install_github("jrosen48/pisaUSA15")
+library(pisaUSA15)
+```
+
+------------------------------------------------------------------------
+
+Latent Profile Models:
+
+-   `model 1` Class-invariant / Diagonal: Equal variances, and covariances fixed to 0 (`variances = "equal"` and `covariances = "zero"`)
+-   `model 2` Class-varying / Diagonal: Free variances and covariances fixed to 0 (`variances = "varying"` and `covariances = "zero"`)
+-   `model 3` Class-invariant / Non-Diagonal: Equal variances and equal covariances (`variances = "equal"` and `covariances = "equal"`)
+-   `model 4` Free variances, and equal covariances (`variances = "varying"` and `covariances = "equal"`)
+-   `model 5` Equal variances, and free covariances (`variances = "equal"` and `covariances = "varying"`)
+-   `model 6` Class Varying / Non-Diagonal: Free variances and free covariances (`variances = "varying"` and `covariances = "varying"`)
+
+------------------------------------------------------------------------
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(haven)
+library(glue)
+library(MplusAutomation)
+library(here)
+library(janitor)
+library(gt)
+library(tidyLPA)
+library(pisaUSA15)
+library(cowplot)
+library(filesstrings)
+here::i_am("lab5_lpa.Rmd")
+```
+
+------------------------------------------------------------------------
+
+## Prepare Data
+
+```{r, eval=TRUE}
+
+pisa <- pisaUSA15[1:500,] %>%
+  dplyr::select(broad_interest, enjoyment, instrumental_mot, self_efficacy)
+
+```
+
+------------------------------------------------------------------------
+
+## Descriptive Statistics
+
+```{r}
+ds <- pisa %>% 
+  pivot_longer(broad_interest:self_efficacy, names_to = "variable") %>% 
+  group_by(variable) %>% 
+  summarise(mean = mean(value, na.rm = TRUE),
+            sd = sd(value, na.rm = TRUE)) 
+
+ds %>% 
+  gt () %>% 
+  tab_header(title = md("**Descriptive Summary**")) %>%
+  cols_label(
+    variable = "Variable",
+    mean = md("M"),
+    sd = md("SD")
+  ) %>%
+  fmt_number(c(2:3),
+             decimals = 2) %>% 
+  cols_align(
+    align = "center",
+    columns = mean
+  ) 
+```
+
+
+------------------------------------------------------------------------
+
+## Enumeration
+
+------------------------------------------------------------------------
+
+### `tidyLPA`
+
+------------------------------------------------------------------------
+
+Enumerate using `estimate_profiles()`:
+
+-   Estimate models with classes $K = 1:4$
+-   Model has 4 continuous indicators
+-   Default variance-covariance specifications (model 1)
+-   Change `variances` and `covariances` to indicate the model you want to specify (see Vignette)
+
+```{r, eval=FALSE}
+
+# Run LPA models 
+lpa_fit <- pisa %>% 
+    estimate_profiles(1:5,
+                      package = "MplusAutomation",
+                      ANALYSIS = "starts = 500 100;",
+                      OUTPUT = "sampstat residual tech11",
+                      variances = c("equal", "varying", "equal", "varying"),
+                      covariances = c("zero", "zero", "equal", "equal"),
+                      keepfiles = TRUE)
+# Compare fit statistics
+get_fit(lpa_fit)
+
+# Move files to folder 
+files <- list.files(here(), pattern = "^model")
+file.move(files, here("tidyLPA"), overwrite = TRUE)
+```
+
+*Note*: Check every single output!
+
+------------------------------------------------------------------------
+
+## Table of Fit
+
+APA formatted model fit table with additional fit indices
+
+```{r}
+source("enum_table")
+
+# Read in model
+output_pisa <- readModels(here("tidyLPA"), quiet = TRUE)
+
+seeRows(output_pisa)
+
+enum_table(output_pisa, 1:5, 6:10, 11:15, 16:20)
+```
+
+
+------------------------------------------------------------------------
+
+## Compare models
+
+```{r}
+# MplusAutomation Method using `compareModels` 
+
+compareModels(output_pisa[["model_3_class_2.out"]],
+  output_pisa[["model_4_class_2.out"]], diffTest = TRUE)
+```
+
+------------------------------------------------------------------------
+
+##  Latent Profile Plot
+
+```{r}
+source("plot_lpa.txt")
+
+plot_lpa(model_name = output_pisa$model_1_class_2.out)
+```
+
+save figure
+
+```{r, eval = FALSE}
+ggsave(here("figures", "C2_LPA_Plot.png"), dpi = "retina", bg = "white", height=6, width=10, units="in")
+```
+
+------------------------------------------------------------------------
+
+## References
+
+
+Hallquist, M. N., & Wiley, J. F. (2018). MplusAutomation: An R Package for Facilitating Large-Scale Latent Variable Analyses in Mplus. Structural equation modeling: a multidisciplinary journal, 25(4), 621-638.
+
+Miller, J. D., Hoffer, T., Suchner, R., Brown, K., & Nelson, C. (1992). LSAY codebook. Northern Illinois University.
+
+Muthén, B. O., Muthén, L. K., & Asparouhov, T. (2017). Regression and mediation analysis using Mplus. Los Angeles, CA: Muthén & Muthén.
+
+Muthén, L.K. and Muthén, B.O. (1998-2017).  Mplus User’s Guide.  Eighth Edition. Los Angeles, CA: Muthén & Muthén
+
+Rosenberg, J. M., van Lissa, C. J., Beymer, P. N., Anderson, D. J., Schell, M. J. & Schmidt, J. A. (2019). tidyLPA: Easily carry out Latent Profile Analysis (LPA) using open-source or commercial software [R package]. https://data-edu.github.io/tidyLPA/
+
+R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+------------------------------------------------------------------------
+
+![](figures/UCSB_Navy_mark.png){width="75%"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

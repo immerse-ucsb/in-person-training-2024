@@ -341,8 +341,7 @@ allFit %>%
   pivot_longer(`BIC`:`AWE`,
                names_to = "Index",
                values_to = "ic_value") %>%
-  mutate(Index = factor(Index,
-                        levels = c ("AWE", "CAIC", "BIC", "aBIC"))) %>%
+  mutate(Index = factor(Index)) %>%
   ggplot(aes(
     x = rowid,
     y = ic_value,
