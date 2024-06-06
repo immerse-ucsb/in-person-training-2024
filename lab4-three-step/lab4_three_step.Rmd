@@ -264,7 +264,7 @@ step3  <- mplusObject(
  " %OVERALL%
   
   math_irt on female; ! covariate as a predictor of the distal outcome
-  C on female;        ! covariate as predictor of C
+  C on female (f1-f3);        ! covariate as predictor of C
 
      %C#1%
   [n#1@{logit_cprobs[1,1]}]; ! MUST EDIT if you do not have a 4-class model. 
@@ -301,7 +301,9 @@ step3  <- mplusObject(
   MODELTEST = "     ! omnibus test of distal means
     m1=m2;
     m2=m3;
-    m3=m4;",
+    m3=m4;
+    !f1=f2;
+    !f2=f3;",
  
   MODELCONSTRAINT = 
    "New (diff12 diff13 diff23 
