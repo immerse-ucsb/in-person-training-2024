@@ -250,6 +250,9 @@ step3  <- mplusObject(
   classes = c(4);
   
   usevar = female math_irt;" ,
+ 
+ DEFINE = 
+   "center female (grandmean);",
   
   ANALYSIS = 
  "estimator = mlr; 
@@ -298,9 +301,7 @@ step3  <- mplusObject(
   MODELTEST = "     ! omnibus test of distal means
     m1=m2;
     m2=m3;
-    m3=m4;
-    
- ",
+    m3=m4;",
  
   MODELCONSTRAINT = 
    "New (diff12 diff13 diff23 

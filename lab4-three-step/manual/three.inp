@@ -12,6 +12,8 @@ NAMES = ENJOY USEFUL LOGICAL JOB ADULT FEMALE MATH_IRT CPROB1 CPROB2 CPROB3 CPRO
   classes = c(4);
   
   usevar = female math_irt;
+DEFINE:
+center female (grandmean);
 ANALYSIS:
 estimator = mlr; 
   type = mixture; 
@@ -68,5 +70,3 @@ MODEL TEST:
     m1=m2;
     m2=m3;
     m3=m4;
-    
- 
