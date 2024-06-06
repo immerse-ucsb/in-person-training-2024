@@ -1,6 +1,6 @@
 Mplus VERSION 8.10
 MUTHEN & MUTHEN
-06/05/2024   4:26 PM
+06/06/2024  12:16 PM
 
 INPUT INSTRUCTIONS
 
@@ -24,7 +24,8 @@ INPUT INSTRUCTIONS
   ANALYSIS:
   estimator = mlr;
       type = mixture;
-      starts = 500 100;
+      starts = 0;
+      optseed = 568405;
   OUTPUT:
   residual tech11 tech14
   SAVEDATA:
@@ -99,12 +100,7 @@ Maximum number of iterations for H1                           2000
 Convergence criterion for H1                             0.100D-03
 Optimization algorithm                                         EMA
 Random Starts Specifications
-  Number of initial stage random starts                        500
-  Number of final stage optimizations                          100
-  Number of initial stage iterations                            10
-  Initial stage convergence criterion                    0.100D+01
-  Random starts scale                                    0.500D+01
-  Random seed for generating random starts                       0
+  Random seed for analysis                                  568405
 Link                                                         LOGIT
 
 Input data file(s)
@@ -155,41 +151,6 @@ UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
       Category 1    0.298          790.000
       Category 2    0.702         1858.000
 
-
-RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
-
-Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
-
-           -7095.123  568405           233
-           -7095.123  939021           8
-           -7095.123  188640           451
-           -7095.123  813779           92
-           -7095.123  175199           247
-           -7095.123  92689            304
-           -7095.123  748692           204
-           -7095.123  749635           420
-           -7095.123  853195           431
-           -7095.123  358488           264
-           -7095.123  520177           262
-           -7095.123  438144           271
-           -7095.123  415931           10
-           -7095.123  82357            339
-           -7095.123  787985           482
-           -7095.123  23012            352
-           -7095.123  576596           99
-           -7095.123  791285           416
-           -7095.123  848331           137
-           -7095.123  252949           487
-           -7095.123  518828           432
-           -7095.123  340112           126
-           -7095.123  741484           441
-
-77 perturbed starting value run(s) did not converge or were rejected in the third stage.
-
-
-
-THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
-RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
 
      IN THE OPTIMIZATION, ONE OR MORE LOGIT THRESHOLDS APPROACHED EXTREME VALUES
      OF -15.000 AND 15.000 AND WERE FIXED TO STABILIZE MODEL ESTIMATION.  THESE
@@ -554,8 +515,8 @@ RESIDUAL OUTPUT
 TECHNICAL 11 OUTPUT
 
      Random Starts Specifications for the k-1 Class Analysis Model
-        Number of initial stage random starts                 500
-        Number of final stage optimizations                   100
+        Number of initial stage random starts                  20
+        Number of final stage optimizations                     4
 
 
 
@@ -565,7 +526,7 @@ TECHNICAL 11 OUTPUT
           2 Times the Loglikelihood Difference             59.597
           Difference in the Number of Parameters                6
           Mean                                              0.064
-          Standard Deviation                                5.866
+          Standard Deviation                                5.865
           P-Value                                          0.0000
 
      LO-MENDELL-RUBIN ADJUSTED LRT TEST
@@ -577,8 +538,8 @@ TECHNICAL 11 OUTPUT
 TECHNICAL 14 OUTPUT
 
      Random Starts Specifications for the k-1 Class Analysis Model
-        Number of initial stage random starts                 500
-        Number of final stage optimizations                   100
+        Number of initial stage random starts                  20
+        Number of final stage optimizations                     4
 
      Random Starts Specification for the k-1 Class Model for Generated Data
         Number of initial stage random starts                   0
@@ -596,9 +557,9 @@ TECHNICAL 14 OUTPUT
           2 Times the Loglikelihood Difference             59.597
           Difference in the Number of Parameters                6
           Approximate P-Value                              0.0000
-          Successful Bootstrap Draws                           10
+          Successful Bootstrap Draws                           20
 
-     WARNING:  OF THE 10 BOOTSTRAP DRAWS, 8 DRAWS HAD BOTH A SMALLER LRT VALUE THAN THE
+     WARNING:  OF THE 20 BOOTSTRAP DRAWS, 12 DRAWS HAD BOTH A SMALLER LRT VALUE THAN THE
      OBSERVED LRT VALUE AND NOT A REPLICATED BEST LOGLIKELIHOOD VALUE FOR THE 4-CLASS MODEL.
      THIS MEANS THAT THE P-VALUE MAY NOT BE TRUSTWORTHY DUE TO LOCAL MAXIMA.
      INCREASE THE NUMBER OF RANDOM STARTS USING THE LRTSTARTS OPTION.
@@ -642,9 +603,9 @@ SAVEDATA INFORMATION
   Save missing symbol        *
 
 
-     Beginning Time:  16:26:03
-        Ending Time:  16:26:13
-       Elapsed Time:  00:00:10
+     Beginning Time:  12:16:22
+        Ending Time:  12:16:29
+       Elapsed Time:  00:00:07
 
 
 

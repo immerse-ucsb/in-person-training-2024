@@ -18,7 +18,8 @@ NAMES = rand lsayid region urban gender mothed fathed raceth math_irt enjoy good
 ANALYSIS:
 estimator = mlr; 
     type = mixture;
-    starts = 500 100;
+    starts = 0;
+    optseed = 568405;
 OUTPUT:
 residual tech11 tech14
 SAVEDATA:

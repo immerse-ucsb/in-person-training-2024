@@ -171,7 +171,8 @@ step1  <- mplusObject(
   ANALYSIS = 
    "estimator = mlr; 
     type = mixture;
-    starts = 500 100;",
+    starts = 0;
+    optseed = 568405;",
   
   SAVEDATA = 
    "File=3step_savedata.dat;
@@ -344,7 +345,7 @@ wald <- as.data.frame(modelParams[["summaries"]]) %>%
 
 # Create table
 
-wald %>% 
+wald_table <- wald %>% 
   gt() %>%
     tab_header(
     title = "Wald Test of Paramter Constraints (Math)") %>%
@@ -354,7 +355,16 @@ wald %>%
   cols_align(align = "center") %>% 
   opt_align_table_header(align = "left") %>% 
   gt::tab_options(table.font.names = "serif")
+
+wald_table
 ```
+
+Save figure
+
+```{r}
+gtsave(wald_table, here("figures","wald_table.docx"))
+```
+
 
 ------------------------------------------------------------------------
 
@@ -434,7 +444,7 @@ estimates %>%
             position=position_dodge(.9),
             vjust = 8) +  
  # scale_fill_grey(start = .4, end = .7) + # Remove for colorful bars
-  labs(y="Interest in Science Issues", x="") +
+  labs(y="Math Scores", x="") +
   theme_cowplot() +
   theme(text = element_text(family = "serif", size = 15),
         axis.text.x = element_text(size=15),
@@ -483,51 +493,6 @@ cov %>%
   cols_align(align = "center") %>% 
   opt_align_table_header(align = "left") %>% 
   gt::tab_options(table.font.names = "serif")
-```
-
-------------------------------------------------------------------------
-
-### Regression slopes, odds ratios, simple slopes
-
-```
-MODEL RESULTS
-
-                                                    Two-Tailed
-                    Estimate       S.E.  Est./S.E.    P-Value
-                    
-Categorical Latent Variables
-
- C#1        ON
-    FEMALE            -0.862      0.121     -7.145      0.000
-
- C#2        ON
-    FEMALE            -0.572      0.146     -3.917      0.000
-
- C#3        ON
-    FEMALE            -0.607      0.134     -4.510      0.000
-
- Intercepts
-    C#1                0.427      0.087      4.908      0.000
-    C#2                0.248      0.109      2.264      0.024
-    C#3                0.029      0.099      0.294      0.769
-    
-
-LOGISTIC REGRESSION ODDS RATIO RESULTS
-
-                                                95% C.I.
-                    Estimate       S.E.  Lower 2.5% Upper 2.5%
-
-Categorical Latent Variables
-
- C#1      ON
-    FEMALE             0.422      0.051      0.333      0.535
-
- C#2      ON
-    FEMALE             0.564      0.082      0.424      0.751
-
- C#3      ON
-    FEMALE             0.545      0.073      0.419      0.710
-
 ```
 
 ------------------------------------------------------------------------
